@@ -53,10 +53,6 @@ def post_to_x(png_path: Path, data: dict, next_friday: str) -> None:
     token  = os.environ["X_ACCESS_TOKEN"]
     tsec   = os.environ["X_ACCESS_SECRET"]
 
-    auth   = tweepy.OAuth1UserHandler(key, secret, token, tsec)
-    v1     = tweepy.API(auth)
-    media  = v1.media_upload(filename=str(png_path))
-
     buy_names  = "・".join(s["name"] for s in data.get("hot_stocks_buy",  []))
     sell_names = "・".join(s["name"] for s in data.get("hot_stocks_sell", []))
     tweet = (
@@ -71,7 +67,7 @@ def post_to_x(png_path: Path, data: dict, next_friday: str) -> None:
         consumer_key=key, consumer_secret=secret,
         access_token=token, access_token_secret=tsec,
     )
-    resp = client.create_tweet(text=tweet, media_ids=[media.media_id])
+    resp = client.create_tweet(text=tweet)
     print(f"    投稿 URL: https://x.com/i/web/status/{resp.data['id']}")
 
 
