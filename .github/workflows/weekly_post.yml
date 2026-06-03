@@ -5,6 +5,9 @@ on:
     - cron: '0 9 * * 0'  # 毎週日曜 09:00 UTC = 18:00 JST
   workflow_dispatch:      # GitHub UI から手動実行も可能
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   generate-and-post:
     runs-on: ubuntu-latest
@@ -18,10 +21,10 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          cache-dependency-path: backend/requirements.txt
+          cache-dependency-path: ai-newspaper/backend/requirements.txt
 
       - name: Install dependencies
-        run: pip install -r backend/requirements.txt
+        run: pip install -r ai-newspaper/backend/requirements.txt
 
       - name: Install Playwright & Chromium
         run: playwright install chromium --with-deps
@@ -36,11 +39,11 @@ jobs:
           X_API_SECRET:    ${{ secrets.X_API_SECRET }}
           X_ACCESS_TOKEN:  ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
-        run: python backend/generate_and_post.py
+        run: python ai-newspaper/backend/generate_and_post.py
 
       - name: Upload PNG as artifact
         uses: actions/upload-artifact@v4
         with:
           name: newspaper-png
-          path: backend/data/newspaper_*.png
+          path: ai-newspaper/backend/data/newspaper_*.png
           retention-days: 30
