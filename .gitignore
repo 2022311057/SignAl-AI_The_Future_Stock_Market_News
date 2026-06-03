@@ -1,0 +1,27 @@
+# Node
+node_modules/
+dist/
+.vite/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# 環境変数（絶対にコミットしない）
+.env
+*.env
+
+# 生成ファイル
+ai-newspaper/backend/data/
+*.png
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

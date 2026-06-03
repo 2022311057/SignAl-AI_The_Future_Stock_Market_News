@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --paper:   #f5f0e8; --ink: #120d04; --ink-mid: #3a3020; --ink-sub: #6a5f4a;
+  --rule:    #8b7355; --rule-lt: #c8b896; --accent: #8b0000;
+  --green:   #1a5c2a; --red: #8b0000;
+}
+body { background: #c4b49a; padding: 1rem; font-family: 'Noto Serif JP', serif; color: var(--ink); }
+.newspaper {
+  width: 1040px; background: var(--paper);
+  box-shadow: 0 6px 32px rgba(0,0,0,.35); border: 1px solid #a89070; margin: 0 auto;
+}
+/* 題字 */
+.masthead { text-align: center; padding: 1.4rem 2rem .8rem; border-bottom: 4px double var(--rule); }
+.masthead-eyebrow { font-family: 'Noto Sans JP', sans-serif; font-size: .65rem; letter-spacing: .25em; color: var(--ink-sub); margin-bottom: .3rem; }
+.masthead-title { font-size: 3.2rem; font-weight: 900; letter-spacing: .12em; line-height: 1.1; }
+.masthead-rule { border: none; border-top: 2px solid var(--ink); margin: .5rem auto; width: 60%; }
+.masthead-meta { display: flex; justify-content: space-between; align-items: center; font-family: 'Noto Sans JP', sans-serif; font-size: .72rem; color: var(--ink-sub); padding: .2rem .4rem 0; }
+.masthead-edition { background: var(--accent); color: #fff; padding: .1rem .5rem; font-size: .68rem; font-weight: 700; }
+/* 市場概況 */
+.market-summary-bar { display: flex; align-items: baseline; gap: .8rem; background: #ede8de; border-top: 2px solid var(--rule); border-bottom: 2px solid var(--rule); padding: .55rem 1.4rem; font-size: .82rem; }
+.summary-kicker { flex-shrink: 0; font-weight: 900; color: var(--accent); letter-spacing: .1em; font-size: .75rem; }
+.summary-body { color: var(--ink-mid); line-height: 1.7; }
+/* 2カラム */
+.columns-wrapper { display: flex; align-items: stretch; }
+.news-col { flex: 1; padding: 1.2rem 1.4rem; min-width: 0; }
+.col-divider { width: 2px; flex-shrink: 0; background: repeating-linear-gradient(to bottom, var(--rule) 0px, var(--rule) 6px, transparent 6px, transparent 10px); }
+.col-kicker { text-align: center; font-size: 1.0rem; font-weight: 900; letter-spacing: .2em; border-top: 3px solid var(--ink); border-bottom: 1px solid var(--rule); padding: .45rem 0 .35rem; margin-bottom: .1rem; }
+.col-kicker-buy  { border-top-color: var(--green); color: var(--green); }
+.col-kicker-sell { border-top-color: var(--red);   color: var(--red); }
+.col-kicker-sub { text-align: center; font-size: .65rem; letter-spacing: .1em; color: var(--green); margin-bottom: .9rem; font-family: 'Noto Sans JP', sans-serif; }
+.col-kicker-sub-sell { color: var(--red); }
+/* 記事 */
+.article-block { border-bottom: 1px solid var(--rule-lt); padding-bottom: 1rem; margin-bottom: 1rem; }
+.article-block:last-child { border-bottom: none; margin-bottom: 0; }
+.article-company-header { margin-bottom: .4rem; }
+.article-company-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .2rem; }
+.article-company-name { font-size: 1.22rem; font-weight: 900; letter-spacing: .04em; line-height: 1.2; }
+.article-company-meta { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+.article-rank { font-family: 'Noto Sans JP', sans-serif; font-size: .6rem; color: var(--ink-sub); font-weight: 700; }
+.article-sector { font-family: 'Noto Sans JP', sans-serif; font-size: .62rem; font-weight: 700; color: #4a3800; background: #e0d4a0; padding: .05rem .4rem; border-radius: 2px; }
+.article-ticker { font-family: monospace; font-size: .6rem; color: var(--ink-sub); background: #e8e0d0; padding: .05rem .3rem; border-radius: 2px; }
+.article-confidence { font-family: 'Noto Sans JP', sans-serif; font-size: .6rem; color: var(--ink-sub); border: 1px solid var(--rule-lt); padding: .05rem .3rem; border-radius: 2px; }
+.rec-badge { flex-shrink: 0; font-family: 'Noto Sans JP', sans-serif; font-size: .64rem; font-weight: 700; padding: .12rem .5rem; border-radius: 2px; }
+.rec-strong-buy  { background: #0a4a20; color: #fff; }
+.rec-buy         { background: var(--green); color: #fff; }
+.rec-neutral     { background: #556070; color: #fff; }
+.rec-sell        { background: #7a3500; color: #fff; }
+.rec-strong-sell { background: var(--red); color: #fff; }
+.article-headline { font-size: 1.05rem; font-weight: 900; line-height: 1.4; margin-bottom: .45rem; border-left: 4px solid var(--accent); padding-left: .5rem; }
+/* 株価比較 */
+.article-price-comparison { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; margin-bottom: .55rem; padding: .4rem .6rem; background: #ede8de; border: 1px solid var(--rule-lt); border-radius: 2px; font-family: 'Noto Sans JP', sans-serif; }
+.price-block { display: flex; flex-direction: column; align-items: flex-start; gap: .05rem; }
+.price-label { font-size: .58rem; color: var(--ink-sub); letter-spacing: .05em; font-weight: 700; }
+.article-price { font-size: 1.2rem; font-weight: 700; color: var(--ink); }
+.article-price-predicted { font-size: 1.2rem; font-weight: 700; }
+.price-up   { color: var(--green); }
+.price-down { color: var(--red); }
+.price-arrow { font-size: 1.1rem; color: var(--ink-sub); font-weight: 700; align-self: center; }
+.article-change { font-size: .82rem; font-weight: 700; }
+.article-mktcap { font-size: .68rem; color: var(--ink-sub); background: #e8e0d0; padding: .05rem .4rem; border-radius: 2px; margin-left: auto; align-self: center; }
+/* 本文 */
+.article-body { font-size: .82rem; line-height: 1.85; letter-spacing: .03em; color: var(--ink-mid); border-top: 1px solid var(--rule-lt); border-bottom: 1px solid var(--rule-lt); padding: .5rem 0; margin-bottom: .45rem; text-align: justify; }
+/* リスク */
+.article-risk { font-family: 'Noto Sans JP', sans-serif; font-size: .68rem; color: #8b4500; background: #fff5e8; border-left: 3px solid #c86400; padding: .25rem .6rem; margin-bottom: .4rem; line-height: 1.65; }
+/* 見通し */
+.outlook-card { background: #ede8de; border: 1px solid var(--rule-lt); border-radius: 2px; padding: .3rem .6rem; margin-bottom: .35rem; }
+.outlook-card-label { font-family: 'Noto Sans JP', sans-serif; font-size: .6rem; font-weight: 700; color: var(--accent); display: block; margin-bottom: .1rem; }
+.outlook-card-text { font-size: .74rem; color: var(--ink-mid); line-height: 1.6; }
+/* 選定理由 */
+.article-reason { font-family: 'Noto Sans JP', sans-serif; font-size: .65rem; color: var(--ink-sub); border-top: 1px dashed var(--rule-lt); padding-top: .25rem; }
+/* フッター */
+.paper-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .4rem; background: var(--ink); color: #c8b896; padding: .55rem 1.4rem; font-family: 'Noto Sans JP', sans-serif; font-size: .62rem; letter-spacing: .03em; }
+</style>
+</head>
+<body>
+
+{%- macro rec_class(rec) -%}
+{%- if '強い買い' in rec %}rec-strong-buy{%- elif '買い' in rec %}rec-buy{%- elif '強い売り' in rec %}rec-strong-sell{%- elif '売り' in rec %}rec-sell{%- else %}rec-neutral{%- endif %}
+{%- endmacro -%}
+
+{%- macro article_block(stock, rank) -%}
+{%- set up = stock.price_change >= 0 -%}
+{%- set predicted = stock.predicted_price_1week if stock.predicted_price_1week is defined and stock.predicted_price_1week else (stock.current_price * (1 + stock.price_change / 100)) | int -%}
+<article class="article-block">
+  <div class="article-company-header">
+    <div class="article-company-top">
+      <span class="article-company-name">{{ stock.name }}</span>
+      <span class="rec-badge {{ rec_class(stock.recommendation) }}">{{ stock.recommendation }}</span>
+    </div>
+    <div class="article-company-meta">
+      <span class="article-rank">第{{ rank }}位</span>
+      <span class="article-sector">{{ stock.sector_jp if stock.sector_jp is defined else 'その他' }}</span>
+      <span class="article-ticker">{{ stock.ticker }}</span>
+      <span class="article-confidence">確度: {{ stock.confidence }}</span>
+    </div>
+  </div>
+  <div class="article-headline">{{ stock.headline }}</div>
+  <div class="article-price-comparison">
+    <div class="price-block">
+      <span class="price-label">現在値</span>
+      <span class="article-price">¥{{ "{:,.0f}".format(stock.current_price) }}</span>
+    </div>
+    <span class="price-arrow">→</span>
+    <div class="price-block">
+      <span class="price-label">{{ next_friday }} 15:00予想</span>
+      <span class="article-price-predicted {{ 'price-up' if up else 'price-down' }}">¥{{ "{:,.0f}".format(predicted) }}</span>
+      <span class="article-change {{ 'price-up' if up else 'price-down' }}">{{ '▲' if up else '▼' }}{{ "%.2f"|format(stock.price_change | abs) }}%</span>
+    </div>
+    <span class="article-mktcap">時価総額 {{ stock.market_cap_str }}</span>
+  </div>
+  <p class="article-body">{{ stock.article }}</p>
+  {%- if stock.risk_note %}
+  <div class="article-risk">⚠ {{ stock.risk_note }}</div>
+  {%- endif %}
+  <div class="outlook-card">
+    <span class="outlook-card-label">【{{ next_friday }} 15:00の見通し】</span>
+    <span class="outlook-card-text">{{ stock.outlook_1week }}</span>
+  </div>
+  <div class="article-reason">▶ 選定理由: {{ stock.reason }}</div>
+</article>
+{%- endmacro -%}
+
+<div class="newspaper">
+  <header class="masthead">
+    <div class="masthead-eyebrow">東 証 銘 柄 × A I 予 測 ／ 株 価 未 来 分 析 専 門 紙</div>
+    <h1 class="masthead-title">未 来 株 価 新 聞</h1>
+    <hr class="masthead-rule">
+    <div class="masthead-meta">
+      <span>{{ edition_date }}</span>
+      <span class="masthead-edition">第 {{ edition_number }} 号</span>
+      <span>Yahoo Finance × Groq AI（無料）</span>
+    </div>
+  </header>
+
+  <section class="market-summary-bar">
+    <span class="summary-kicker">◆ 市場概況 ◆</span>
+    <span class="summary-body">{{ market_summary }}</span>
+  </section>
+
+  <div class="columns-wrapper">
+    <div class="news-col">
+      <div class="col-kicker col-kicker-buy">次 週 金 曜 注 目 買 い 銘 柄</div>
+      <div class="col-kicker-sub">— {{ next_friday }} 15:00 上 昇 予 想 —</div>
+      {% for stock in hot_stocks_buy %}{{ article_block(stock, loop.index) }}{% endfor %}
+    </div>
+    <div class="col-divider"></div>
+    <div class="news-col">
+      <div class="col-kicker col-kicker-sell">次 週 金 曜 注 目 売 り 銘 柄</div>
+      <div class="col-kicker-sub col-kicker-sub-sell">— {{ next_friday }} 15:00 下 落 予 想 —</div>
+      {% for stock in hot_stocks_sell %}{{ article_block(stock, loop.index) }}{% endfor %}
+    </div>
+  </div>
+
+  <footer class="paper-footer">
+    <span>本紙の情報は投資判断の参考情報であり、投資を推奨するものではありません。最終判断はご自身でお願いします。</span>
+    <span>AI分析: Groq（Llama 3.3-70B）　データ提供: Yahoo Finance</span>
+  </footer>
+</div>
+</body>
+</html>

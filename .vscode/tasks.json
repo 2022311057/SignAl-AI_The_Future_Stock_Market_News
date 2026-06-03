@@ -1,0 +1,104 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "📦 初回セットアップ（pip + npm）",
+      "dependsOn": ["pip install", "npm install"],
+      "dependsOrder": "parallel",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "pip install",
+      "type": "shell",
+      "command": "python -m pip install -r requirements.txt",
+      "options": {
+        "cwd": "${workspaceFolder}/ai-newspaper/backend"
+      },
+      "presentation": {
+        "group": "setup",
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "npm install",
+      "type": "shell",
+      "command": "npm install",
+      "options": {
+        "cwd": "${workspaceFolder}/ai-newspaper/frontend"
+      },
+      "presentation": {
+        "group": "setup",
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "🚀 AI未来新聞を起動",
+      "dependsOn": ["Start Backend", "Start Frontend"],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Backend",
+      "type": "shell",
+      "command": "uvicorn main:app --host 0.0.0.0 --port 8000 --reload",
+      "options": {
+        "cwd": "${workspaceFolder}/ai-newspaper/backend"
+      },
+      "isBackground": true,
+      "presentation": {
+        "group": "newspaper",
+        "panel": "dedicated",
+        "label": "Backend (FastAPI)",
+        "reveal": "always"
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(.*)$",
+          "file": 1,
+          "line": 1,
+          "message": 1
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": "Application startup complete"
+        }
+      }
+    },
+    {
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/ai-newspaper/frontend"
+      },
+      "isBackground": true,
+      "presentation": {
+        "group": "newspaper",
+        "panel": "dedicated",
+        "label": "Frontend (Vite)",
+        "reveal": "always"
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(.*)$",
+          "file": 1,
+          "line": 1,
+          "message": 1
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": "Local:.*localhost"
+        }
+      }
+    }
+  ]
+}
