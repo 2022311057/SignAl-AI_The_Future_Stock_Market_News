@@ -109,10 +109,20 @@ def main():
     screenshot(html, png_path)
     print(f"    保存: {png_path}")
 
+    print("    Web公開用ファイルを docs/ に出力中...")
+    docs_dir = Path(__file__).parent.parent.parent / "docs"
+    docs_dir.mkdir(exist_ok=True)
+    (docs_dir / "index.html").write_text(html, encoding="utf-8")
+    (docs_dir / ".nojekyll").touch()
+    shutil.copy(png_path, docs_dir / "newspaper.png")
+
     print("4/4 X投稿中...")
     if os.environ.get("X_API_KEY"):
-        post_to_x(png_path, data, next_friday)
-        print("    投稿完了!")
+        try:
+            post_to_x(png_path, data, next_friday)
+            print("    投稿完了!")
+        except Exception as e:
+            print(f"    X投稿失敗（PNG/Web公開は完了済み）: {e}")
     else:
         print("    X_API_KEY 未設定のため投稿スキップ（PNG のみ生成済み）")
 
